@@ -1,0 +1,5 @@
+pip uninstall requests
+pip uninstall beautifulsoup4
+
+pip install requests==2.26.0
+pip install beautifulsoup4==4.10.0
