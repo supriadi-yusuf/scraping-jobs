@@ -29,8 +29,10 @@ def get_total_pages(url):
     #scraping step
     soup = BeautifulSoup(response.text, 'html.parser')
 
+    # find tag ul and class _1decxdv0 _1decxdv3 _110qf3s5a _110qf3sfq
     pagination = soup.find('ul', '_1decxdv0 _1decxdv3 _110qf3s5a _110qf3sfq')
 
+    # find all tag li in the element
     pages = pagination.find_all('li')
 
     page_list = [page.text for page in pages if page.text.isnumeric()]
