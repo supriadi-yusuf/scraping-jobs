@@ -5,6 +5,7 @@ import os
 import json
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 site = 'https://id.jobstreet.com'
 url = site + '/id/python-jobs'
@@ -91,6 +92,7 @@ def get_items(url):
 
         job_list.append( data_dict)
 
+    # create json
     try:
         os.mkdir('json_results')
     except:
@@ -98,6 +100,11 @@ def get_items(url):
 
     with open('json_results/job_list.json', 'w') as outFile:
         json.dump( job_list, outFile)
+
+    # create csv dan excel
+    df = pd.DataFrame(job_list) # create data frame
+    df.to_csv('job_lists.csv', index=False) # store to csv file
+    df.to_excel('job_lists.xlsx', index=False) # store to xlsx file
 
 
 if __name__ == '__main__':
