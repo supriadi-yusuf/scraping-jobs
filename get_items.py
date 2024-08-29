@@ -32,7 +32,7 @@ def get_items(url):
 
         try:
             os.mkdir('temp')
-        except:
+        except FileExistsError:
             pass
 
         with open('temp/page.html', 'w') as outfile:
@@ -92,7 +92,7 @@ def get_items(url):
     # create json
     try:
         os.mkdir('json_results')
-    except:
+    except FileExistsError:
         pass
 
     with open('json_results/job_list.json', 'w') as outFile:
