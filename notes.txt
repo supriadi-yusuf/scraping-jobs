@@ -22,3 +22,4 @@ down grade numpy into version < 2.0.0
 pip install "numpy<2.0.0"
 numpy 1.24.4.is installed
 
+circular import is not allowed
