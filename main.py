@@ -2,6 +2,7 @@
 from scrape_total_pages import get_total_pages
 
 import os
+import json
 import requests
 from bs4 import BeautifulSoup
 
@@ -90,7 +91,13 @@ def get_items(url):
 
         job_list.append( data_dict)
 
-    print(job_list)
+    try:
+        os.mkdir('json_results')
+    except:
+        pass
+
+    with open('json_results/job_list.json', 'w') as outFile:
+        json.dump( job_list, outFile)
 
 
 if __name__ == '__main__':
