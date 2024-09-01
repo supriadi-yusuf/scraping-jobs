@@ -7,15 +7,18 @@ import json
 import os
 
 
-def get_items(url):
+def get_items(url, query='', location='', page=''):
 
     soup: BeautifulSoup = None
 
     # read from file
-    with open('temp/page.html', 'r') as inputFile:
-        content = inputFile.read()
-        soup = BeautifulSoup(content, 'html.parser')
-        #print(soup.prettify())
+    try:
+        with open(f'temp/page-{query}-{location}-{page}.html', 'r') as inputFile:
+            content = inputFile.read()
+            soup = BeautifulSoup(content, 'html.parser')
+            #print(soup.prettify())
+    except FileNotFoundError:
+        pass
 
     if soup is None:
 
@@ -26,6 +29,15 @@ def get_items(url):
             'Connection': 'keep-alive',
         }
 
+        if query:
+            url = f'{url}/id/{query}'
+
+            if location:
+                url = f'{url}/{location}'
+
+            if page:
+                url=f'{url}?page={page}'
+
         response = requests.get(url, headers=headers)
         if response.status_code != 200 :
             raise ConnectionError
@@ -35,12 +47,12 @@ def get_items(url):
         except FileExistsError:
             pass
 
-        with open('temp/page.html', 'w') as outfile:
+        with open(f'temp/page-{query}-{location}-{page}.html', 'w') as outfile:
             outfile.write(response.text)
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-    items = soup.find_all('article', '_1decxdv0')
+    items = soup.find_all('article', {'data-automation':'normalJob'})
 
     print('================================')
 
@@ -89,16 +101,5 @@ def get_items(url):
 
         job_list.append( data_dict)
 
-    # create json
-    try:
-        os.mkdir('json_results')
-    except FileExistsError:
-        pass
+    return job_list
 
-    with open('json_results/job_list.json', 'w') as outFile:
-        json.dump( job_list, outFile)
-
-    # create csv dan excel
-    df = pd.DataFrame(job_list) # create data frame
-    df.to_csv('job_lists.csv', index=False) # store to csv file
-    df.to_excel('job_lists.xlsx', index=False) # store to xlsx file
